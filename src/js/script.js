@@ -90,6 +90,7 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     initAccordion(){
@@ -153,19 +154,49 @@
     
       // for every category (param)...
       for(let paramId in thisProduct.data.params) {
-        // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes', options: {olives; {label; 'Olives',... } - obiekt do calej opcji, nie tylko do nazwy
+
+        // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes', 
+        // options: {olives; {label; 'Olives',... } - obiekt do calej opcji, nie tylko do nazwy
         const param = thisProduct.data.params[paramId];
         console.log(paramId, param);
     
         // for every option in this category
         for(let optionId in param.options) {
 
-          // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }  - obiekt do calej opcji, nie tylko do nazwy
+          // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true } 
+          //  - obiekt do calej opcji, nie tylko do nazwy
           const option = param.options[optionId];
           console.log(optionId, option);
 
-          // check if there is param with a name of paramId in formData and if it includes optionId - czy dana opcja, danej kategorii jest wybrana w formularzu
-          if(formData[paramId] && formData[paramId].includes(optionId)) {
+          // const optionImage = thisProduct.imageWrapper.querySelector(.paramId-optionId);
+          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
+          console.log('optionImage:', optionImage);
+
+          // if(optionImage) {
+          //   if (formData[paramId] && formData[paramId].includes(optionId)) {
+          //     optionImage.classList.add(classNames.menuProduct.imageVisible);
+          //   }else{
+          //     optionImage.classList.remove(classNames.menuProduct.imageVisible);
+          //   }  
+          // }
+
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+
+
+          if(optionImage) {
+            if (optionSelected) {
+              optionImage.classList.add(classNames.menuProduct.imageVisible);
+            }else{
+              optionImage.classList.remove(classNames.menuProduct.imageVisible);
+            }  
+          }
+ 
+
+          // check if there is param with a name of paramId in formData and if it includes optionId 
+          // - czy dana opcja, danej kategorii jest wybrana w formularzu
+
+          // if(formData[paramId] && formData[paramId].includes(optionId)) {
+          if(optionSelected) {
 
             // check if the option is not default
             if(!option.default == true) {
@@ -181,8 +212,9 @@
               price -= option.price;
             }
           }
-        }
 
+        
+        }
       }
     
       // update calculated price in the HTML
