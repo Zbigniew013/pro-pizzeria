@@ -36,7 +36,7 @@ class Booking{
       ],
     };
 
-    // console.log('getData params', params);
+    console.log('getData params', params);
 
     const urls = {
       booking:        settings.db.url + '/' + settings.db.booking + '?' + params.booking.join('&'),
@@ -44,15 +44,57 @@ class Booking{
       eventsRepeat:   settings.db.url + '/' + settings.db.event   + '?' + params.eventsRepeat.join('&'),
     };
 
-    // console.log('getData urls', urls);
+    console.log('getData urls', urls);
 
-    fetch(urls.booking)
-      .then(function(bookingsResponse){
-        return bookingsResponse.json();
-      })
-      .then(function(bookings){
+    Promise.all([
+      fetch(urls.booking),
+      fetch(urls.eventsCurrent),
+      fetch(urls.eventsRepeat),
+    ])
+      .then(function(allResponses){
+        const bookingsResponse = allResponses[0];
+        const eventsCurrentResponse = allResponses[1];
+        const eventsRepeatResponse = allResponses[2];
+        return Promise.all([
+          bookingsResponse.json(),
+          eventsCurrentResponse.json(),
+          eventsRepeatResponse.json(),
+        ]);
+      }) 
+      .then(function([bookings, eventsCurrent, eventsRepeat]){
         console.log(bookings);
+        console.log(eventsCurrent);
+        console.log(eventsRepeat);
       });
+
+    // Promise.all([
+    //   fetch(urls.booking),
+    // ])
+    //   .then(function(allResponses){
+    //     const bookingsResponse = allResponses[0];
+    //     return Promise.all([
+    //       bookingsResponse.json(),
+    //     ]);
+    //   }) 
+    //   .then(function([bookings]){
+    //     console.log(bookings);
+    //   });
+
+    // fetch(urls.booking)
+    //   .then(function(bookingResponse){
+    //     return bookingResponse.json();
+    //   })
+    //   .then(function(booking){
+    //     console.log('booking', booking);
+    //   });
+
+    // fetch(urls.eventsCurrent)
+    //   .then(function(eventsCurrentResponse){
+    //     return eventsCurrentResponse.json();
+    //   })
+    //   .then(function(eventsCurrent){
+    //     console.log('eventsCurrent', eventsCurrent);
+    //   });  
   }
 
   render(){
