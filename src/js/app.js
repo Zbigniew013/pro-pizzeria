@@ -2,6 +2,7 @@ import {settings, select, classNames} from './settings.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
 import Booking from './components/Booking.js';
+import Home from './components/Home.js';
 
 const app = {
 
@@ -17,6 +18,8 @@ const app = {
 
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
     thisApp.navLinks = document.querySelectorAll(select.nav.links);
+
+    thisApp.navLinksStarter = document.querySelectorAll(select.nav.linksStart);
 
     const idFromHash = window.location.hash.replace('#/', '');
     // console.log('idFromHash:', idFromHash);
@@ -128,6 +131,7 @@ const app = {
     thisApp.initCart();
     thisApp.initPages();
     thisApp.initBooking();
+    thisApp.initHome();
   },
 
   initCart: function(){
@@ -141,7 +145,15 @@ const app = {
     thisApp.productList.addEventListener('add-to-cart', function(event){
       app.cart.add(event.detail.product);
     });
-
   },
+
+  initHome: function(){
+    const thisApp = this;
+
+    const homeWidget = document.querySelector(select.containerOf.home);
+    thisApp.home = new Home(homeWidget);
+  },
+
+
 };
 app.init();
